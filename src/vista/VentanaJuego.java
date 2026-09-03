@@ -15,14 +15,14 @@ public class VentanaJuego extends JFrame implements VistaTablero {
     private PresenterJuego presenter;
 
     // PALETA DE COLORES (Inspirada en estética Dark/Neon)
-    private static final Color COLOR_FONDO = new Color(24, 25, 48);          // Fondo general azul noche
-    private static final Color COLOR_MARCO = new Color(36, 40, 72);          // Contenedores oscuros
-    private static final Color COLOR_CELDA_VACIA = new Color(48, 54, 94);   // Hueco del tablero
+    private static final Color colorDeFondo = new Color(24, 25, 48);          // Fondo general azul
+    private static final Color colorMarco = new Color(36, 40, 72);          // Marcos oscuros
+    private static final Color colorCeldaVacia = new Color(48, 54, 94);   // Celda vacia
     
-    private static final Color COLOR_FICHA_1 = new Color(79, 168, 246);     // Celeste vibrante
-    private static final Color COLOR_FICHA_2 = new Color(247, 93, 114);     // Rojo / Coral
-    private static final Color COLOR_FICHA_3 = new Color(245, 245, 248);    // Blanco cálido
-    private static final Color COLOR_FICHA_ALTA = new Color(255, 196, 45);   // Amarillo / Dorado (6, 12, etc.)
+    private static final Color colorFicha1 = new Color(79, 168, 246);     // Celeste vibrante
+    private static final Color colorFicha2 = new Color(247, 93, 114);     // Rojo 
+    private static final Color colorFicha3 = new Color(245, 245, 248);    // Blanco 
+    private static final Color colorFichaBuena = new Color(255, 196, 45);   // Amarillo 
 
     public VentanaJuego() {
         setTitle("Threes!");
@@ -30,14 +30,14 @@ public class VentanaJuego extends JFrame implements VistaTablero {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout(10, 10));
-        getContentPane().setBackground(COLOR_FONDO);
+        getContentPane().setBackground(colorDeFondo);
 
-        // --- 1. CABECERA (Puntuación + Próxima Ficha) ---
+        //cabecera (Puntuación + Próxima Ficha)
         JPanel panelCabecera = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 15));
         panelCabecera.setOpaque(false);
 
         // Tarjeta de Puntaje
-        PanelRedondeado tarjetaPuntaje = new PanelRedondeado(COLOR_MARCO, 16);
+        PanelRedondeado tarjetaPuntaje = new PanelRedondeado(colorMarco, 16);
         tarjetaPuntaje.setLayout(new BoxLayout(tarjetaPuntaje, BoxLayout.Y_AXIS));
         tarjetaPuntaje.setPreferredSize(new Dimension(160, 65));
         tarjetaPuntaje.setBorder(BorderFactory.createEmptyBorder(8, 10, 8, 10));
@@ -56,7 +56,7 @@ public class VentanaJuego extends JFrame implements VistaTablero {
         tarjetaPuntaje.add(labelPuntaje);
 
         // Tarjeta de Próxima Ficha
-        PanelRedondeado tarjetaSiguiente = new PanelRedondeado(COLOR_MARCO, 16);
+        PanelRedondeado tarjetaSiguiente = new PanelRedondeado(colorMarco, 16);
         tarjetaSiguiente.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 8));
         tarjetaSiguiente.setPreferredSize(new Dimension(160, 65));
 
@@ -74,8 +74,8 @@ public class VentanaJuego extends JFrame implements VistaTablero {
         panelCabecera.add(tarjetaSiguiente);
         add(panelCabecera, BorderLayout.NORTH);
 
-        // --- 2. TABLERO PRINCIPAL ---
-        PanelRedondeado marcoTablero = new PanelRedondeado(COLOR_MARCO, 24);
+        //TABLERO PRINCIPAL
+        PanelRedondeado marcoTablero = new PanelRedondeado(colorMarco, 24);
         marcoTablero.setLayout(new GridLayout(4, 4, 10, 10));
         marcoTablero.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
         marcoTablero.setPreferredSize(new Dimension(400, 400));
@@ -93,14 +93,14 @@ public class VentanaJuego extends JFrame implements VistaTablero {
         contenedorCentral.add(marcoTablero);
         add(contenedorCentral, BorderLayout.CENTER);
 
-        // --- 3. PIE DE PÁGINA (Instrucciones) ---
+        // PIE DE PÁGINA (Instrucciones)
         JLabel labelInfo = new JLabel("Flechas: Mover  |  Z: Deshacer", SwingConstants.CENTER);
         labelInfo.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         labelInfo.setForeground(new Color(120, 130, 160));
         labelInfo.setBorder(BorderFactory.createEmptyBorder(0, 0, 15, 0));
         add(labelInfo, BorderLayout.SOUTH);
 
-        // --- CAPTURA DE TECLADO ---
+        // CAPTURA DE TECLADO
         setFocusable(true);
         addKeyListener(new KeyListener() {
             @Override
@@ -143,20 +143,20 @@ public class VentanaJuego extends JFrame implements VistaTablero {
     private void actualizarCelda(CeldaGrafica celda, int valor) {
         if (valor == 0) {
             celda.setText("");
-            celda.setColorBackground(COLOR_CELDA_VACIA);
+            celda.setColorBackground(colorCeldaVacia);
         } else {
             celda.setText(String.valueOf(valor));
             if (valor == 1) {
-                celda.setColorBackground(COLOR_FICHA_1);
+                celda.setColorBackground(colorFicha1);
                 celda.setForeground(Color.WHITE);
             } else if (valor == 2) {
-                celda.setColorBackground(COLOR_FICHA_2);
+                celda.setColorBackground(colorFicha2);
                 celda.setForeground(Color.WHITE);
             } else if (valor == 3) {
-                celda.setColorBackground(COLOR_FICHA_3);
+                celda.setColorBackground(colorFicha3);
                 celda.setForeground(new Color(30, 30, 50));
             } else {
-                celda.setColorBackground(COLOR_FICHA_ALTA);
+                celda.setColorBackground(colorFichaBuena);
                 celda.setForeground(new Color(30, 30, 50));
             }
         }
@@ -196,7 +196,7 @@ public class VentanaJuego extends JFrame implements VistaTablero {
     
     private static class CeldaGrafica extends JLabel {
         private final int radio;
-        private Color colorBackground = COLOR_CELDA_VACIA;
+        private Color colorBackground = colorCeldaVacia;
 
         public CeldaGrafica(int radio) {
             super("", SwingConstants.CENTER);
