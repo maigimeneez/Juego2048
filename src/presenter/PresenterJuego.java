@@ -21,7 +21,12 @@ public class PresenterJuego {
     public void iniciarJuego() {
         actualizarVista();
     }
-
+    
+    public void onDeshacer() {
+        if (tablero.deshacer()) {
+            actualizarVista();
+        }
+    }
 
     public void onFlechaArriba() {
         tablero.moverArriba();

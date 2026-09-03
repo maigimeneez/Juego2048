@@ -7,6 +7,9 @@ public class Tablero {
    private int[][] celdas;
    Random random = new Random();
    private int proximaFicha;
+   private int[][] celdasAnteriores;
+   private int proximaFichaAnterior;
+   private boolean puedoDeshacer = false;
   
    public Tablero() {
        celdas = new int[tamanio][tamanio];
@@ -49,8 +52,30 @@ public class Tablero {
        if (valor1 == 2 && valor2 == 1) return true;
        return valor1 == valor2 && valor1 != 0 && valor1 % 3 == 0;
    }
+   private int[][] clonarMatriz(int[][] original) {
+	    int[][] copia = new int[tamanio][tamanio];
+	    for (int i = 0; i < tamanio; i++) {
+	        System.arraycopy(original[i], 0, copia[i], 0, tamanio);
+	    }
+	    return copia;
+   }
+   
+   private void guardarEstado() {
+	    celdasAnteriores = clonarMatriz(celdas);
+	    proximaFichaAnterior = proximaFicha;
+	    puedoDeshacer = true;
+   }
+   public boolean deshacer() {
+	    if (!puedoDeshacer) return false;
+	    
+	    celdas = clonarMatriz(celdasAnteriores);
+	    proximaFicha = proximaFichaAnterior;
+	    puedoDeshacer = false; // Evita deshacer múltiples veces seguidas si solo quieres 1 paso
+	    return true;
+   }
    //funcion para mover arriba
    public void moverArriba() {
+	   guardarEstado();
        for (int columna = 0; columna < tamanio; columna++) {
            // se guarda lo original antes de tocar algo, asi siempre compara al original
            int[] original = new int[tamanio];
@@ -81,7 +106,8 @@ public class Tablero {
    }
    //SIN HACER
    public void moverAbajo() {
-   	for (int columna = 0; columna < tamanio; columna++) {
+	   guardarEstado();
+	   for (int columna = 0; columna < tamanio; columna++) {
            int[] original = new int[tamanio];
            for (int fila = 0; fila < tamanio; fila++) {
                original[fila] = getValor(fila, columna);
@@ -106,7 +132,8 @@ public class Tablero {
    }
    //SIN HACER
    public void moverIzquierda() {
-   	for (int fila = 0; fila < tamanio; fila++) {
+	   guardarEstado();
+	   for (int fila = 0; fila < tamanio; fila++) {
            int[] original = new int[tamanio];
            for (int columna = 0; columna < tamanio; columna++) {
                original[columna] = getValor(fila, columna);
@@ -131,7 +158,8 @@ public class Tablero {
    }
    //SIN HACER
    public void moverDerecha() {
-   	for (int fila = 0; fila < tamanio; fila++) {
+	   guardarEstado();
+	   for (int fila = 0; fila < tamanio; fila++) {
            int[] original = new int[tamanio];
            for (int columna = 0; columna < tamanio; columna++) {
                original[columna] = getValor(fila, columna);

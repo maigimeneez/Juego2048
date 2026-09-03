@@ -106,7 +106,7 @@ public class VentanaJuego extends JFrame implements VistaTablero {
                     case KeyEvent.VK_DOWN -> presenter.onFlechaAbajo();
                     case KeyEvent.VK_LEFT -> presenter.onFlechaIzquierda();
                     case KeyEvent.VK_RIGHT -> presenter.onFlechaDerecha();
-                }
+                    case KeyEvent.VK_Z -> presenter.onDeshacer();                }
             }
             
             @Override
