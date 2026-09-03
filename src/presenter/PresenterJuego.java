@@ -43,6 +43,11 @@ public class PresenterJuego {
         tablero.moverDerecha();
         actualizarVista();
     }
+    public void reiniciarJuego() {
+    	tablero.reiniciarJuego();
+    	actualizarVista();
+    }
+
 
     private void actualizarVista() {
         vista.mostrarTablero(tablero.getCeldas());

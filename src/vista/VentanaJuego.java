@@ -26,13 +26,13 @@ public class VentanaJuego extends JFrame implements VistaTablero {
 
     public VentanaJuego() {
         setTitle("Threes!");
-        setSize(520, 680);
+        setSize(520, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout(10, 10));
         getContentPane().setBackground(colorDeFondo);
 
-        //cabecera (Puntuación + Próxima Ficha)
+        // CABECERA (Puntuación + Próxima Ficha)
         JPanel panelCabecera = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 15));
         panelCabecera.setOpaque(false);
 
@@ -74,7 +74,7 @@ public class VentanaJuego extends JFrame implements VistaTablero {
         panelCabecera.add(tarjetaSiguiente);
         add(panelCabecera, BorderLayout.NORTH);
 
-        //TABLERO PRINCIPAL
+        // TABLERO PRINCIPAL
         PanelRedondeado marcoTablero = new PanelRedondeado(colorMarco, 24);
         marcoTablero.setLayout(new GridLayout(4, 4, 10, 10));
         marcoTablero.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
@@ -93,12 +93,32 @@ public class VentanaJuego extends JFrame implements VistaTablero {
         contenedorCentral.add(marcoTablero);
         add(contenedorCentral, BorderLayout.CENTER);
 
-        // PIE DE PÁGINA (Instrucciones)
+        // PIE DE PÁGINA (Unifica el Botón de Reiniciar y las Instrucciones)
+        JPanel panelPie = new JPanel();
+        panelPie.setLayout(new BoxLayout(panelPie, BoxLayout.Y_AXIS));
+        panelPie.setOpaque(false);
+
+        JButton botonReiniciar = new JButton("Reiniciar");
+        botonReiniciar.setFont(new Font("Arial", Font.BOLD, 14));
+        botonReiniciar.setFocusable(false);
+        botonReiniciar.setAlignmentX(Component.CENTER_ALIGNMENT);
+        botonReiniciar.addActionListener(e -> {
+            if (presenter != null) {
+                presenter.reiniciarJuego();
+            }
+        });
+
         JLabel labelInfo = new JLabel("Flechas: Mover  |  Z: Deshacer", SwingConstants.CENTER);
         labelInfo.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         labelInfo.setForeground(new Color(120, 130, 160));
-        labelInfo.setBorder(BorderFactory.createEmptyBorder(0, 0, 15, 0));
-        add(labelInfo, BorderLayout.SOUTH);
+        labelInfo.setAlignmentX(Component.CENTER_ALIGNMENT);
+        labelInfo.setBorder(BorderFactory.createEmptyBorder(8, 0, 15, 0));
+
+        panelPie.add(botonReiniciar);
+        panelPie.add(Box.createVerticalStrut(8));
+        panelPie.add(labelInfo);
+
+        add(panelPie, BorderLayout.SOUTH);
 
         // CAPTURA DE TECLADO
         setFocusable(true);
@@ -169,10 +189,22 @@ public class VentanaJuego extends JFrame implements VistaTablero {
 
     @Override
     public void mostrarFinDeJuego(int puntajeFinal) {
-        JOptionPane.showMessageDialog(this, "¡Juego terminado!\nPuntaje final: " + puntajeFinal);
+        int respuesta = JOptionPane.showConfirmDialog(
+                this,
+                "¡Juego terminado! Puntaje final: " + puntajeFinal + "\n ¿Volver a jugar?",
+                "Game Over",
+                JOptionPane.YES_NO_OPTION
+        );     
+        
+        if (respuesta == JOptionPane.YES_OPTION) {
+            if (presenter != null) {
+                presenter.reiniciarJuego();
+            }
+        } else {
+            System.exit(0);
+        }
     }
 
-    
     private static class PanelRedondeado extends JPanel {
         private final int radio;
         private Color colorFondo;
@@ -193,7 +225,7 @@ public class VentanaJuego extends JFrame implements VistaTablero {
             super.paintComponent(g);
         }
     }
-    
+
     private static class CeldaGrafica extends JLabel {
         private final int radio;
         private Color colorBackground = colorCeldaVacia;
