@@ -197,31 +197,76 @@ public class Tablero {
        agregarFichaAleatoria();
    }
    public boolean estaTerminado() {
-       for (int fila = 0; fila < tamanio; fila++) {
-           for (int columna = 0; columna < tamanio; columna++) {
-               if (estaVacia(fila, columna)) {
-                   return false;
-               }
-           }
-       }
+       return !hayEspacioVacio() && !hayFusionPosible();
+   }
+
+   //verificamos cada casilla con la de abajo y derecha, no hace falta izquierda y arriba porque comparariamos dos veces
+   public boolean hayFusionPosible() {
        for (int fila = 0; fila < tamanio; fila++) {
            for (int columna = 0; columna < tamanio; columna++) {
                int actual = getValor(fila, columna);
+
+               //comparamos derecha
                if (columna + 1 < tamanio) {
                    int derecha = getValor(fila, columna + 1);
                    if (esFusionable(actual, derecha)) {
-                       return false;
+                       return true;//si se puede fuccionar entonces true
                    }
                }
+
+               // comparamos abajo
                if (fila + 1 < tamanio) {
                    int abajo = getValor(fila + 1, columna);
                    if (esFusionable(actual, abajo)) {
-                       return false;
+                       return true;//si se puede fuccionar entonces true
                    }
                }
            }
        }
-       return true;
+       return false;
+   }
+ //funcion para saber si en toda la matriz hay un espacio en 0(una de las condiciones para verificar si el juego termino)
+   public boolean hayEspacioVacio() {
+       //recorremos toda la matriz para buscar casilla
+       for (int fila = 0; fila < tamanio; fila++) {
+           for (int columna = 0; columna < tamanio; columna++) {
+               if (estaVacia(fila, columna)) {
+                   return true; //si encontro una entonces retorno true
+               }
+           }
+       }
+       return false; //si no fslse(no hay celdas libres)
+   }
+
+   
+   //
+   //PUNTAJE
+   //
+
+   //calcula el valor de la ficha elevando nivel a 3
+   private int puntosDeFicha(int valor) {
+       if (valor < 3) return 0;
+
+       int nivel = 0;
+       int v = valor;
+
+       while (v > 3) {
+           v = v / 2;//primero dividimos el valor en 2 hasta llegar a un numero menor a 3
+           nivel++;//el nivel es la potencia
+       }
+
+       return (int) Math.pow(3, nivel);//por ultimo hacemos la potencia de 3 elevado nivel
+   }
+
+   //basicamente recorro la matriz y voy llamando puntos de ficha y sumandolos
+   public int getPuntaje() {
+       int total = 0;
+       for (int fila = 0; fila < tamanio; fila++) {
+           for (int columna = 0; columna < tamanio; columna++) {
+               total += puntosDeFicha(getValor(fila, columna));
+           }
+       }
+       return total;
    }
    public int getValor(int fila, int columna) {
        return celdas[fila][columna];

@@ -172,10 +172,7 @@ public class VentanaJuego extends JFrame implements VistaTablero {
         JOptionPane.showMessageDialog(this, "¡Juego terminado!\nPuntaje final: " + puntajeFinal);
     }
 
-    // =========================================================================
-    // COMPONENTES PERSONALIZADOS CON BORDES REDONDEADOS Y ANTI-ALIASING
-    // =========================================================================
-
+    
     private static class PanelRedondeado extends JPanel {
         private final int radio;
         private Color colorFondo;
@@ -196,7 +193,7 @@ public class VentanaJuego extends JFrame implements VistaTablero {
             super.paintComponent(g);
         }
     }
-
+    
     private static class CeldaGrafica extends JLabel {
         private final int radio;
         private Color colorBackground = COLOR_CELDA_VACIA;

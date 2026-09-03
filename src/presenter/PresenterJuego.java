@@ -1,22 +1,18 @@
 package presenter;
 
-
 import modelo.Tablero;
 import vista.VistaTablero;
-
 
 public class PresenterJuego {
     private Tablero tablero;
     private VistaTablero vista;
     private int puntaje;
 
-
     public PresenterJuego(VistaTablero vista) {
         this.vista = vista;
         this.tablero = new Tablero();
         this.puntaje = 0;
     }
-
 
     public void iniciarJuego() {
         actualizarVista();
@@ -33,31 +29,27 @@ public class PresenterJuego {
         actualizarVista();
     }
 
-
     public void onFlechaAbajo() {
         tablero.moverAbajo();
         actualizarVista();
     }
-
 
     public void onFlechaIzquierda() {
         tablero.moverIzquierda();
         actualizarVista();
     }
 
-
     public void onFlechaDerecha() {
         tablero.moverDerecha();
         actualizarVista();
     }
 
-
     private void actualizarVista() {
         vista.mostrarTablero(tablero.getCeldas());
         vista.mostrarProximaFicha(tablero.getProximaFicha());
-        vista.mostrarPuntaje(puntaje);
+        vista.mostrarPuntaje(tablero.getPuntaje());
         if (tablero.estaTerminado()) {
-            vista.mostrarFinDeJuego(puntaje);
+            vista.mostrarFinDeJuego(tablero.getPuntaje());
         }
     }
 }
