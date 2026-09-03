@@ -24,8 +24,22 @@ public class Tablero {
            agregarFichaAleatoria();
        }
    }
+   private boolean hayCeldasVacias() {
+	    for (int fila = 0; fila < tamanio; fila++) {
+	        for (int columna = 0; columna < tamanio; columna++) {
+	            if (estaVacia(fila, columna)) {
+	                return true;
+	            }
+	        }
+	    }
+	    return false;
+	}
    //agrrega las fichas iniciales, funciona en tableros mas grandes
    private void agregarFichaAleatoria() {
+	   
+	   if (!hayCeldasVacias()) {
+	        return; 
+	   }
        boolean encontro = false;
        while(!encontro){
            //busco posicion random y genero el valor aleatorio
