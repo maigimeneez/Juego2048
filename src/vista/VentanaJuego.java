@@ -187,16 +187,13 @@ public class VentanaJuego extends JFrame implements VistaTablero {
         labelPuntaje.setText(String.valueOf(puntaje));
     }
 
+    
     @Override
     public void mostrarFinDeJuego(int puntajeFinal) {
-        int respuesta = JOptionPane.showConfirmDialog(
-                this,
-                "¡Juego terminado! Puntaje final: " + puntajeFinal + "\n ¿Volver a jugar?",
-                "Game Over",
-                JOptionPane.YES_NO_OPTION
-        );     
-        
-        if (respuesta == JOptionPane.YES_OPTION) {
+        VentanaFin dialogo = new VentanaFin(this, puntajeFinal);
+        dialogo.setVisible(true);
+
+        if (dialogo.debeReiniciar()) {
             if (presenter != null) {
                 presenter.reiniciarJuego();
             }
