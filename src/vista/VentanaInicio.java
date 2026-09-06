@@ -47,7 +47,7 @@ public class VentanaInicio extends JFrame {
 
         //Boton "Salir"
         JButton botonSalir = crearBotonGeneral("Salir");
-        botonSalir.addActionListener(e -> System.exit(0));
+        botonSalir.addActionListener(e -> Main.salirDelJuego());
         panelMenu.add(botonSalir);
         
         //para agregar el panel del menu al panel prinmcipal

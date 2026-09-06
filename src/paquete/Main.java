@@ -17,4 +17,7 @@ public class Main {
        presenter.iniciarJuego();
     }
     	
+    public static void salirDelJuego() {
+    	System.exit(0);
+    }
 }

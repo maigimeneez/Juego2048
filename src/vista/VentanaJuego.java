@@ -3,6 +3,9 @@ package vista;
 import presenter.PresenterJuego;
 
 import javax.swing.*;
+
+import paquete.Main;
+
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -198,7 +201,7 @@ public class VentanaJuego extends JFrame implements VistaTablero {
                 presenter.reiniciarJuego();
             }
         } else {
-            System.exit(0);
+        	Main.salirDelJuego();
         }
     }
 
