@@ -121,9 +121,9 @@ public class VentanaJuego extends JFrame implements VistaTablero {
         botonMenu.addActionListener(e -> {
         	if(presenter != null) {//registra el puntaje hasta el momento de tocar el boton menu
         		modelo.GestorPuntajes.agregarPuntaje(labelPuntaje.getText().isEmpty() ? 0 : Integer.parseInt(labelPuntaje.getText()));
-        	}
-            dispose(); // Cierrra la ventana actual
-            new VentanaInicio(); // Devuelve al menu de inicio
+        	} 
+        	paquete.Main.volverAlMenu(this);
+            
         });
         
         panelBotones.add(botonReiniciar);
@@ -220,7 +220,8 @@ public class VentanaJuego extends JFrame implements VistaTablero {
                 presenter.reiniciarJuego();
             }
         } else {
-        	Main.salirDelJuego();
+        	dispose();
+        	new VentanaInicio();
         }
     }
 

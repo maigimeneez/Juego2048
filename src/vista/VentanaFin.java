@@ -70,15 +70,15 @@ public class VentanaFin extends JDialog {
         });
         
         //boton para salir
-        JButton btnSalir = new JButton("Salir");
-        btnSalir.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        btnSalir.setForeground(colorTextoSecundario);
-        btnSalir.setContentAreaFilled(false);
-        btnSalir.setBorderPainted(false);
-        btnSalir.setFocusPainted(false);
-        btnSalir.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnSalir.setAlignmentX(Component.CENTER_ALIGNMENT);
-        btnSalir.addActionListener(e -> {
+        JButton btnVolverAlMenu = new JButton("Ir al Menu");
+        btnVolverAlMenu.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        btnVolverAlMenu.setForeground(colorTextoSecundario);
+        btnVolverAlMenu.setContentAreaFilled(false);
+        btnVolverAlMenu.setBorderPainted(false);
+        btnVolverAlMenu.setFocusPainted(false);
+        btnVolverAlMenu.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnVolverAlMenu.setAlignmentX(Component.CENTER_ALIGNMENT);
+        btnVolverAlMenu.addActionListener(e -> {
             reiniciar = false;
             dispose();
         });
@@ -90,7 +90,7 @@ public class VentanaFin extends JDialog {
         contenido.add(Box.createVerticalStrut(20));
         contenido.add(btnReiniciar);
         contenido.add(Box.createVerticalStrut(5));
-        contenido.add(btnSalir);
+        contenido.add(btnVolverAlMenu);
 
         setContentPane(contenido);
         setBackground(new Color(0, 0, 0, 0)); 
