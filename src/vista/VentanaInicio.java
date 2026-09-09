@@ -41,7 +41,10 @@ public class VentanaInicio extends JFrame {
         /////// Boton "mejores puntajes"
         JButton botonPuntajes = crearBotonGeneral("Mejores Puntajes");
         botonPuntajes.addActionListener(e -> {
-            JOptionPane.showMessageDialog(this, "Proximamente");
+        	setVisible(false);
+        	new VentanaPuntajes(this);
+        	
+            //JOptionPane.showMessageDialog(this, "Proximamente");
         });
         panelMenu.add(botonPuntajes);
 

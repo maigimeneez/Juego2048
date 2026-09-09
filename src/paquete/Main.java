@@ -1,5 +1,7 @@
 package paquete;
 
+import javax.swing.JFrame;
+
 import presenter.PresenterJuego;
 import vista.VentanaJuego;
 import vista.VentanaInicio;
@@ -20,4 +22,14 @@ public class Main {
     public static void salirDelJuego() {
     	System.exit(0);
     }
+    
+    //metodo para volver hacia el menu desde la ventana del juego/tablero
+    public static void volverAlMenu(JFrame ventanaActual) {
+    	if (ventanaActual != null) {
+            ventanaActual.dispose();
+        }
+        new VentanaInicio();
+    
+    }
+    
 }

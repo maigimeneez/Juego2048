@@ -54,6 +54,7 @@ public class PresenterJuego {
         vista.mostrarProximaFicha(tablero.getProximaFicha());
         vista.mostrarPuntaje(tablero.getPuntaje());
         if (tablero.estaTerminado()) {
+        	modelo.GestorPuntajes.agregarPuntaje(tablero.getPuntaje());
             vista.mostrarFinDeJuego(tablero.getPuntaje());
         }
     }

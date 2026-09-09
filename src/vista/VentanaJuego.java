@@ -101,6 +101,10 @@ public class VentanaJuego extends JFrame implements VistaTablero {
         panelPie.setLayout(new BoxLayout(panelPie, BoxLayout.Y_AXIS));
         panelPie.setOpaque(false);
 
+        
+        JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
+        panelBotones.setOpaque(false);
+        
         JButton botonReiniciar = new JButton("Reiniciar");
         botonReiniciar.setFont(new Font("Arial", Font.BOLD, 14));
         botonReiniciar.setFocusable(false);
@@ -110,6 +114,20 @@ public class VentanaJuego extends JFrame implements VistaTablero {
                 presenter.reiniciarJuego();
             }
         });
+        
+        JButton botonMenu = new JButton("Menu");
+        botonMenu.setFont(new Font("Arial", Font.BOLD, 14));
+        botonMenu.setFocusable(false);
+        botonMenu.addActionListener(e -> {
+        	if(presenter != null) {//registra el puntaje hasta el momento de tocar el boton menu
+        		modelo.GestorPuntajes.agregarPuntaje(labelPuntaje.getText().isEmpty() ? 0 : Integer.parseInt(labelPuntaje.getText()));
+        	}
+            dispose(); // Cierrra la ventana actual
+            new VentanaInicio(); // Devuelve al menu de inicio
+        });
+        
+        panelBotones.add(botonReiniciar);
+        panelBotones.add(botonMenu);
 
         JLabel labelInfo = new JLabel("Flechas: Mover  |  Z: Deshacer", SwingConstants.CENTER);
         labelInfo.setFont(new Font("Segoe UI", Font.PLAIN, 12));
@@ -117,7 +135,8 @@ public class VentanaJuego extends JFrame implements VistaTablero {
         labelInfo.setAlignmentX(Component.CENTER_ALIGNMENT);
         labelInfo.setBorder(BorderFactory.createEmptyBorder(8, 0, 15, 0));
 
-        panelPie.add(botonReiniciar);
+        panelPie.add(panelBotones);
+        //panelPie.add(botonReiniciar);
         panelPie.add(Box.createVerticalStrut(8));
         panelPie.add(labelInfo);
 
