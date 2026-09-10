@@ -87,115 +87,102 @@ public class Tablero {
 	    puedoDeshacer = false; // Evita deshacer múltiples veces seguidas si solo quieres 1 paso
 	    return true;
    }
-   //funcion para mover arriba
-   public void moverArriba() {
-	   guardarEstado();
-       for (int columna = 0; columna < tamanio; columna++) {
-           // se guarda lo original antes de tocar algo, asi siempre compara al original
-           int[] original = new int[tamanio];
-           for (int fila = 0; fila < tamanio; fila++) {
-               original[fila] = getValor(fila, columna);
-           }
-           // Comparamos cada fila con su vecina de arriba, SIEMPRE en base al snapshot
-           for (int fila = 1; fila < tamanio; fila++) {
-               int arriba = original[fila - 1];
-               int actual = original[fila];
-               if (actual == 0) {
-                   continue; // significa que como no hay ninguna ficha sigue el for nomas, porque no hauy que mover
-               }
-               //si la ficha de arriba es 0 entonces movemos para arriba
-               if (arriba == 0) {
-                   setValor(fila - 1, columna, actual); //se mueve para arriba
-                   setValor(fila, columna, 0);
-               }
-               //si la ficha de arriba no es 0 entonces vemos si es fuccionable y la fuccionamos
-               else if (esFusionable(arriba, actual)) {
-                   setValor(fila - 1, columna, arriba + actual); // se fusiona
-                   setValor(fila, columna, 0);
-               }
-               // si no es ninguno de los casos no hace nada
-           }
-       }
-       agregarFichaAleatoria();//despues de cada movimiento agregamos una ficha aleatoria
-   }
-   //SIN HACER
-   public void moverAbajo() {
-	   guardarEstado();
-	   for (int columna = 0; columna < tamanio; columna++) {
-           int[] original = new int[tamanio];
-           for (int fila = 0; fila < tamanio; fila++) {
-               original[fila] = getValor(fila, columna);
-           }
-           // Recorremos desde el penúltimo hacia arriba
-           for (int fila = tamanio - 2; fila >= 0; fila--) {
-               int abajo = original[fila + 1];
-               int actual = original[fila];
-               if (actual == 0) {
-                   continue;
-               }
-               if (abajo == 0) {
-                   setValor(fila + 1, columna, actual);
-                   setValor(fila, columna, 0);
-               } else if (esFusionable(abajo, actual)) {
-                   setValor(fila + 1, columna, abajo + actual);
-                   setValor(fila, columna, 0);
-               }
-           }
-       }
-       agregarFichaAleatoria();
-   }
-   //SIN HACER
-   public void moverIzquierda() {
-	   guardarEstado();
-	   for (int fila = 0; fila < tamanio; fila++) {
-           int[] original = new int[tamanio];
-           for (int columna = 0; columna < tamanio; columna++) {
-               original[columna] = getValor(fila, columna);
-           }
-           // Recorremos de izquierda a derecha (desde la segunda columna)
-           for (int columna = 1; columna < tamanio; columna++) {
-               int izquierda = original[columna - 1];
-               int actual = original[columna];
-               if (actual == 0) {
-                   continue;
-               }
-               if (izquierda == 0) {
-                   setValor(fila, columna - 1, actual);
-                   setValor(fila, columna, 0);
-               } else if (esFusionable(izquierda, actual)) {
-                   setValor(fila, columna - 1, izquierda + actual);
-                   setValor(fila, columna, 0);
-               }
-           }
-       }
-       agregarFichaAleatoria();
-   }
-   //SIN HACER
-   public void moverDerecha() {
-	   guardarEstado();
-	   for (int fila = 0; fila < tamanio; fila++) {
-           int[] original = new int[tamanio];
-           for (int columna = 0; columna < tamanio; columna++) {
-               original[columna] = getValor(fila, columna);
-           }
-           // Recorremos de derecha a izquierda (desde el penúltimo)
-           for (int columna = tamanio - 2; columna >= 0; columna--) {
-               int derecha = original[columna + 1];
-               int actual = original[columna];
-               if (actual == 0) {
-                   continue;
-               }
-               if (derecha == 0) {
-                   setValor(fila, columna + 1, actual);
-                   setValor(fila, columna, 0);
-               } else if (esFusionable(derecha, actual)) {
-                   setValor(fila, columna + 1, derecha + actual);
-                   setValor(fila, columna, 0);
-               }
-           }
-       }
-       agregarFichaAleatoria();
-   }
+    //funcion para mover arriba
+    public void moverArriba() {
+        guardarEstado();
+        for (int columna = 0; columna < tamanio; columna++) {
+            boolean[] yaFusiono = new boolean[tamanio]; // marca celdas destino ya usadas en esta jugada
+            for (int fila = 1; fila < tamanio; fila++) {
+                int actual = getValor(fila, columna);
+                if (actual == 0) {
+                    continue; // no hay ficha, no hay nada que mover
+                }
+                int arriba = getValor(fila - 1, columna);
+                if (arriba == 0) {
+                    setValor(fila - 1, columna, actual); // se mueve para arriba
+                    setValor(fila, columna, 0);
+                } else if (!yaFusiono[fila - 1] && esFusionable(arriba, actual)) {
+                    setValor(fila - 1, columna, arriba + actual); // se fusiona
+                    setValor(fila, columna, 0);
+                    yaFusiono[fila - 1] = true; // esta celda ya recibió una fusión en esta jugada
+                }
+                // si no es ninguno de los casos no hace nada
+            }
+        }
+        agregarFichaAleatoria(); //despues de cada movimiento agregamos una ficha aleatoria
+    }
+
+    //funcion para mover abajo
+    public void moverAbajo() {
+        guardarEstado();
+        for (int columna = 0; columna < tamanio; columna++) {
+            boolean[] yaFusiono = new boolean[tamanio];
+            for (int fila = tamanio - 2; fila >= 0; fila--) {
+                int actual = getValor(fila, columna);
+                if (actual == 0) {
+                    continue;
+                }
+                int abajo = getValor(fila + 1, columna);
+                if (abajo == 0) {
+                    setValor(fila + 1, columna, actual);
+                    setValor(fila, columna, 0);
+                } else if (!yaFusiono[fila + 1] && esFusionable(abajo, actual)) {
+                    setValor(fila + 1, columna, abajo + actual);
+                    setValor(fila, columna, 0);
+                    yaFusiono[fila + 1] = true;
+                }
+            }
+        }
+        agregarFichaAleatoria();
+    }
+
+    //funcion para mover izquierda
+    public void moverIzquierda() {
+        guardarEstado();
+        for (int fila = 0; fila < tamanio; fila++) {
+            boolean[] yaFusiono = new boolean[tamanio];
+            for (int columna = 1; columna < tamanio; columna++) {
+                int actual = getValor(fila, columna);
+                if (actual == 0) {
+                    continue;
+                }
+                int izquierda = getValor(fila, columna - 1);
+                if (izquierda == 0) {
+                    setValor(fila, columna - 1, actual);
+                    setValor(fila, columna, 0);
+                } else if (!yaFusiono[columna - 1] && esFusionable(izquierda, actual)) {
+                    setValor(fila, columna - 1, izquierda + actual);
+                    setValor(fila, columna, 0);
+                    yaFusiono[columna - 1] = true;
+                }
+            }
+        }
+        agregarFichaAleatoria();
+    }
+
+    //funcion para mover derecha
+    public void moverDerecha() {
+        guardarEstado();
+        for (int fila = 0; fila < tamanio; fila++) {
+            boolean[] yaFusiono = new boolean[tamanio];
+            for (int columna = tamanio - 2; columna >= 0; columna--) {
+                int actual = getValor(fila, columna);
+                if (actual == 0) {
+                    continue;
+                }
+                int derecha = getValor(fila, columna + 1);
+                if (derecha == 0) {
+                    setValor(fila, columna + 1, actual);
+                    setValor(fila, columna, 0);
+                } else if (!yaFusiono[columna + 1] && esFusionable(derecha, actual)) {
+                    setValor(fila, columna + 1, derecha + actual);
+                    setValor(fila, columna, 0);
+                    yaFusiono[columna + 1] = true;
+                }
+            }
+        }
+        agregarFichaAleatoria();
+    }
    public boolean estaTerminado() {
        return !hayEspacioVacio() && !hayFusionPosible();
    }
