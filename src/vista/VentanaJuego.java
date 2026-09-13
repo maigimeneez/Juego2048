@@ -119,9 +119,9 @@ public class VentanaJuego extends JFrame implements VistaTablero {
         botonMenu.setFont(new Font("Arial", Font.BOLD, 14));
         botonMenu.setFocusable(false);
         botonMenu.addActionListener(e -> {
-        	if(presenter != null) {//registra el puntaje hasta el momento de tocar el boton menu
-        		modelo.GestorPuntajes.agregarPuntaje(labelPuntaje.getText().isEmpty() ? 0 : Integer.parseInt(labelPuntaje.getText()));
-        	} 
+        	//if(presenter != null) {//registra el puntaje hasta el momento de tocar el boton menu
+        		//modelo.GestorPuntajes.agregarPuntaje(labelPuntaje.getText().isEmpty() ? 0 : Integer.parseInt(labelPuntaje.getText()));
+        	//} 
         	paquete.Main.volverAlMenu(this);
             
         });
