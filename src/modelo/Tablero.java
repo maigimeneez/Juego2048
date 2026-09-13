@@ -1,5 +1,7 @@
 package modelo;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class Tablero {
@@ -60,6 +62,34 @@ public class Tablero {
        }
        return false;
    }
+   private void agregarFichaEnBordeFila(int fila) {
+       List<Integer> columnasLibres = new ArrayList<>();
+       for (int columna = 0; columna < tamanio; columna++) {
+           if (estaVacia(fila, columna)) {
+               columnasLibres.add(columna);
+           }
+       }
+       if (columnasLibres.isEmpty()) {
+           return;
+       }
+       int columna = columnasLibres.get(random.nextInt(columnasLibres.size()));
+       setValor(fila, columna, proximaFicha);
+       generarProximaFicha();
+   }
+   private void agregarFichaEnBordeColumna(int columna) {
+       List<Integer> filasLibres = new ArrayList<>();
+       for (int fila = 0; fila < tamanio; fila++) {
+           if (estaVacia(fila, columna)) {
+               filasLibres.add(fila);
+           }
+       }
+       if (filasLibres.isEmpty()) {
+           return;
+       }
+       int fila = filasLibres.get(random.nextInt(filasLibres.size()));
+       setValor(fila, columna, proximaFicha);
+       generarProximaFicha();
+   }
    //funcion para ver si dos valores son fucionables
    private boolean esFusionable(int valor1, int valor2) {
        if (valor1 == 1 && valor2 == 2) return true;
@@ -109,7 +139,7 @@ public class Tablero {
                 // si no es ninguno de los casos no hace nada
             }
         }
-        agregarFichaAleatoria(); //despues de cada movimiento agregamos una ficha aleatoria
+        agregarFichaEnBordeFila(tamanio - 1);
     }
 
     //funcion para mover abajo
@@ -133,7 +163,7 @@ public class Tablero {
                 }
             }
         }
-        agregarFichaAleatoria();
+        agregarFichaEnBordeFila(0);
     }
 
     //funcion para mover izquierda
@@ -157,7 +187,7 @@ public class Tablero {
                 }
             }
         }
-        agregarFichaAleatoria();
+        agregarFichaEnBordeColumna(tamanio - 1);
     }
 
     //funcion para mover derecha
@@ -181,7 +211,7 @@ public class Tablero {
                 }
             }
         }
-        agregarFichaAleatoria();
+        agregarFichaEnBordeColumna(0);
     }
    public boolean estaTerminado() {
        return !hayEspacioVacio() && !hayFusionPosible();

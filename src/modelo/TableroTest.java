@@ -47,6 +47,46 @@ class TableroTest {
         }
         return cantidad;
     }
+    private void cargarColumna(Tablero t, int columna, int... valores) {
+        for (int fila = 0; fila < valores.length; fila++) {
+            t.setValor(fila, columna, valores[fila]);
+        }
+    }
+
+    private int contarFichasEnFila(Tablero t, int fila) {
+        int cantidad = 0;
+        for (int columna = 0; columna < Tablero.tamanio; columna++) {
+            if (t.getValor(fila, columna) != 0) cantidad++;
+        }
+        return cantidad;
+    }
+
+    private int contarFichasEnColumna(Tablero t, int columna) {
+        int cantidad = 0;
+        for (int fila = 0; fila < Tablero.tamanio; fila++) {
+            if (t.getValor(fila, columna) != 0) cantidad++;
+        }
+        return cantidad;
+    }
+
+    private int[][] snapshot(Tablero t) {
+        int[][] copia = new int[Tablero.tamanio][Tablero.tamanio];
+        for (int fila = 0; fila < Tablero.tamanio; fila++) {
+            for (int columna = 0; columna < Tablero.tamanio; columna++) {
+                copia[fila][columna] = t.getValor(fila, columna);
+            }
+        }
+        return copia;
+    }
+
+    private void assertTableroIgual(int[][] esperado, Tablero actual) {
+        for (int fila = 0; fila < Tablero.tamanio; fila++) {
+            for (int columna = 0; columna < Tablero.tamanio; columna++) {
+                assertEquals(esperado[fila][columna], actual.getValor(fila, columna),
+                        "Difiere en fila " + fila + ", columna " + columna);
+            }
+        }
+    }
 
    
     @Test
@@ -97,6 +137,7 @@ class TableroTest {
     void tresYSeisNoSeFusionan() {
         cargarFila(tablero, 0, 3, 6, 0, 0);
         tablero.moverIzquierda();
+        // Distintos valores: no se fusionan, y como no hay lugar tampoco se mueven
         assertEquals(3, tablero.getValor(0, 0));
         assertEquals(6, tablero.getValor(0, 1));
     }
@@ -177,6 +218,78 @@ class TableroTest {
         int valor = tablero.getProximaFicha();
         assertTrue(valor >= 1 && valor <= 3);
     }
+    @Test
+    void alMoverArribaLaFichaNuevaApareceEnLaFilaInferior() {
+        cargarFila(tablero, 0, 3, 3, 3, 3); // fila de arriba llena, nada para mover/fusionar
+        cargarFila(tablero, 1, 0, 0, 0, 0);
+        cargarFila(tablero, 2, 0, 0, 0, 0);
+        cargarFila(tablero, 3, 0, 0, 0, 0);
+ 
+        tablero.moverArriba();
+ 
+        assertEquals(1, contarFichasEnFila(tablero, 3));
+        assertEquals(0, contarFichasEnFila(tablero, 1));
+        assertEquals(0, contarFichasEnFila(tablero, 2));
+    }
+ 
+    @Test
+    void alMoverAbajoLaFichaNuevaApareceEnLaFilaSuperior() {
+        cargarFila(tablero, 0, 0, 0, 0, 0);
+        cargarFila(tablero, 1, 0, 0, 0, 0);
+        cargarFila(tablero, 2, 0, 0, 0, 0);
+        cargarFila(tablero, 3, 3, 3, 3, 3); // fila de abajo llena, nada para mover/fusionar
+ 
+        tablero.moverAbajo();
+ 
+        assertEquals(1, contarFichasEnFila(tablero, 0));
+        assertEquals(0, contarFichasEnFila(tablero, 1));
+        assertEquals(0, contarFichasEnFila(tablero, 2));
+    }
+ 
+    @Test
+    void alMoverIzquierdaLaFichaNuevaApareceEnColumnaDerecha() {
+        cargarColumna(tablero, 0, 3, 3, 3, 3); // columna izquierda llena
+        cargarColumna(tablero, 1, 0, 0, 0, 0);
+        cargarColumna(tablero, 2, 0, 0, 0, 0);
+        cargarColumna(tablero, 3, 0, 0, 0, 0);
+ 
+        tablero.moverIzquierda();
+ 
+        assertEquals(1, contarFichasEnColumna(tablero, 3));
+        assertEquals(0, contarFichasEnColumna(tablero, 1));
+        assertEquals(0, contarFichasEnColumna(tablero, 2));
+    }
+ 
+    @Test
+    void alMoverDerechaLaFichaNuevaApareceEnColumnaIzquierda() {
+        cargarColumna(tablero, 0, 0, 0, 0, 0);
+        cargarColumna(tablero, 1, 0, 0, 0, 0);
+        cargarColumna(tablero, 2, 0, 0, 0, 0);
+        cargarColumna(tablero, 3, 3, 3, 3, 3); // columna derecha llena
+ 
+        tablero.moverDerecha();
+ 
+        assertEquals(1, contarFichasEnColumna(tablero, 0));
+        assertEquals(0, contarFichasEnColumna(tablero, 1));
+        assertEquals(0, contarFichasEnColumna(tablero, 2));
+    }
+ 
+    @Test
+    void siElBordeOpuestoEstaCompletamenteLlenoNoApareceFichaNueva() {
+        int[][] valores = {
+            {1, 3, 1, 3},
+            {3, 1, 3, 1},
+            {1, 3, 1, 3},
+            {3, 1, 3, 1}
+        };
+        cargarTableroCompleto(tablero, valores);
+        int[][] antes = snapshot(tablero);
+ 
+        tablero.moverArriba();
+ 
+        assertTableroIgual(antes, tablero);
+    }
+ 
 
     @Test
     void reiniciarJuegoDejaExactamenteTresFichas() {
